@@ -9,13 +9,18 @@
 import Foundation
 
 enum InfoCollageData {
-    static let pathFile = "/Users/daniil/Documents/Sibers/Colors.csv"
+    static let pathFile = "/Users/daniil/Downloads/Giant Collage Data - Colors.csv"
 }
 
 struct ColorGroup: Encodable {
     var title: String?
-    var colors: [String]?
+    var colors: [Colors]?
     var isVip: Bool?
+}
+
+struct Colors: Encodable {
+    var title: String?
+    var color: String?
 }
 
 var csvString: String?
@@ -63,7 +68,7 @@ if let csvString = csvString {
     }
 }
 
-var colors = [String]()
+var colors = [Colors]()
 var titleTmp = title.first
 var isVipTemp: Bool? = true
 var indexFor = 0
@@ -73,18 +78,18 @@ var colorGroup = [ColorGroup]()
 for index in 0..<title.count  {
     indexFor += 1
     if title[index] == titleTmp {
-        colors.append(color[index])
+        colors.append(Colors(title: "", color: color[index]))
     } else {
         
-        if isVip[index] == "1" {
+        if isVip[index-1] == "1" {
             isVipTemp = true
-        } else if isVip[index] == "0" {
+        } else if isVip[index-1] == "0" {
             isVipTemp = nil
         }
         
         colorGroup.append(ColorGroup(title: title[index-1], colors: colors, isVip: isVipTemp))
         colors = []
-        colors.append(color[index])
+        colors.append(Colors(title: "", color: color[index]))
         titleTmp = title[index]
     }
 }
@@ -97,7 +102,7 @@ if isVip[indexFor-1] == "1" {
 
 colorGroup.append(ColorGroup(title: title[indexFor-2], colors: colors, isVip: isVipTemp))
 colors = []
-colors.append(color[indexFor-1])
+colors.append((Colors(title: "", color: color[indexFor-1])))
 titleTmp = title[indexFor-1]
 
 
